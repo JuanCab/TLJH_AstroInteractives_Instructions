@@ -92,5 +92,9 @@ to the cronjob list.  That has worked for us.
 		* ``filepath`` is ``index.ipynb``, the name of the index notebook.
 		* At this point, you can test the link and see if it has the desired effect of downloading and updating the copy of your GitHub repository.
 
-	* Once you have generated the link, change it as follows to trigger *appmode**.  The link you generated should look like the following: ``https://<my_TLJH_server>/hub/user-redirect/git-pull?repo=<repo_URL_encoded>&subPath=index.ipynb&app=notebook`` To automatically trigger *appmode*, replace ``subPath=index.ipynb`` with ``urlpath=apps/AstroInteractives/index.ipynb`` and that should do it.  The part between ``apps`` and ``index.ipynb`` depends on the name of your repo, because by default a git pull creates a directory with the same name as your repository.  I assumed you named it ``AstroInteractives``.  When you make the change, it will look like so it looks like: ``https://<my_TLJH_server>/hub/user-redirect/git-pull?repo=<repo_URL_encoded>&urlpath=apps/AstroInteractives/index.ipynb&app=notebook``
+	* Once you have generated the link, change it as follows to trigger *appmode*.  The link you generated should look like the following:
+			https://<my_TLJH_server>/hub/user-redirect/git-pull?repo=<repo_URL_encoded>&subPath=index.ipynb&app=notebook
+To automatically trigger *appmode*, replace ``subPath=index.ipynb`` with ``urlpath=apps/AstroInteractives/index.ipynb`` and that should do it.  The part between ``apps`` and ``index.ipynb`` depends on the name of your repo, because by default a git pull creates a directory with the same name as your repository.  I assumed you named it ``AstroInteractives``.  When you make the change, it will look like so it looks like:
+			https://<my_TLJH_server>/hub/user-redirect/git-pull?repo=<repo_URL_encoded>&urlpath=apps/AstroInteractives/index.ipynb&app=notebook
+I used [bit.ly](https://bitly.com) to generate a much shorter URL that I give my students.
 
