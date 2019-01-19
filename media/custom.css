@@ -1,0 +1,16 @@
+#new-buttons {
+Ê Ê visibility:hidden;
+Ê Ê display:none;
+}
+#tabs.nav.nav-tabs {
+Ê Ê visibility:hidden;
+Ê Ê display:none;
+}
+a.btn.btn-default.btn-sm.navbar-btn.pull-right {
+Ê Ê visibility:hidden;
+Ê Ê display:none;
+}
+span.btn.btn-xs.btn-default.btn-upload {
+Ê Ê visibility:hidden;
+Ê Ê display:none;
+}
