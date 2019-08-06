@@ -63,7 +63,7 @@ More detailed instructions for enabling encryption are on [the TLJH documentatio
 2. **Installing the necessary Python Libraries:** The next step is to set up the default anaconda environment to include the necessary libraries to run AstroInteractives. From the admin account, open a terminal and from the command line, add ``conda-forge``` as a location to pull python packages from, then install the necessary python packages:
 
 		sudo -E conda config --add channels conda-forge
-		sudo -E conda install appmode bqplot pandas scipy ipywidgets numpy pythreejs
+		sudo -E conda install appmode astropy bqplot pandas matplotlib scipy ipywidgets numpy pythreejs
 
 3. **Shut Down Existing Servers:** At this point, you will need to shut down any existing JupyterHub server processes (via the web browser admin interface) to make sure these new libraries are available.  To do this:
 Log into your THJH via the web interface
@@ -79,14 +79,47 @@ Log into your THJH via the web interface
 
 		git clone https://github.com/<your_github_account>/AstroInteractives.git
 		
-5. **Killing old processes:**  Unfortunately, we have discovered that in the current version of TLJH, there is no automatic shutdown of old JupyterHub processes.  If students don't explicitly log out, their process sits there and if a few dozen of these processes remain in memory, they can bog down the server and consume resources.  Our solution was to add a cronjob using 'sudo crontab -e' to issue a ``killall -p jupyterhub-singleuser`` at 8:00am each morning by adding the line
+### Configuring Voila to Share our Installation
+
+When we first set up these servers, we had to then set up indivudal accounts for each student in the class, which was a logistical pain.  However, in summer 2019, we hit on a solution by using [Voila](https://github.com/QuantStack/voila) to publically expose executable Jupyter notebooks.  By using voila, we simply point the students to a webpage and they access the interactives directly like any other webapp.
+
+1. **Install Voila:** While logged in on the JupyterHub terminal, type
+
+```
+sudo -E conda install -c conda-forge voila
+```
+to install voila.  After installation, you will need to install the corresponding JupyterHub extension, by typing:
+```
+jupyter labextension install @jupyter-voila/jupyterlab-preview
+```
+
+2. **Run Voila:** Once we have Voila installed, just `cd` to the directory where you have the AstroInteractives installed and type:
+
+```
+voila -Ñno-browser
+```
+
+which opens up port 8866 for access to the interactive (*NOTE*: the default voila session also strips the source from the HTML comments, so students can't see the source code by any means).  Have students point their web-browsers to 
+
+```
+http://<name of host>:8866/voila/render/index.ipynb
+```
+
+and they should see the index page for the interactives.  I saved this URL as a shorter [bit.ly](http://bit.ly) link and distributed it to students.  **WARNING**: I currently have made no effort to automate the launching of this `voila` server so if the server goes down, I have to manually relaunch it.
+
+
+### Configuring TLJH for Individual Accounts (We no longer do this!)
+
+Initially, we set up the server to require each student to have an individual account (which we had to set up) and then set up the following process for automatically downloading and executing the notebooks.  This was a real hassle in terms of maintenence, so we switched to the method outlined above for sharing an installation publically.  However, I am preserving these instructions for posterity.
+
+1. **Killing old processes:**  Unfortunately, we have discovered that in the current version of TLJH, there is no automatic shutdown of old JupyterHub processes.  If students don't explicitly log out, their process sits there and if a few dozen of these processes remain in memory, they can bog down the server and consume resources.  Our solution was to add a cronjob using 'sudo crontab -e' to issue a ``killall -p jupyterhub-singleuser`` at 8:00am each morning by adding the line
 
 		0 8 * * * killall -p jupyterhub-singleuser
 to the cronjob list.  That has worked for us.
 
-6. **Customizing the interface**: If you want to disable the ability for your students to easily access the control panel or terminal, you can copy the [custom.css](media/custom.css) file to the following location on your server: ``/etc/skel/.jupyter/custom/custom.css`` Once you have done so, any *NEW* users will have this custom CSS copied to their account during their first login, disabling those features.  This really isn't helpful for security, but it does help prevent students accidentally killing their JupyterHub process.
+2. **Customizing the interface**: If you want to disable the ability for your students to easily access the control panel or terminal, you can copy the [custom.css](media/custom.css) file to the following location on your server: ``/etc/skel/.jupyter/custom/custom.css`` Once you have done so, any *NEW* users will have this custom CSS copied to their account during their first login, disabling those features.  This really isn't helpful for security, but it does help prevent students accidentally killing their JupyterHub process.
 
-7. **Setting up Automatic download of notebooks and Automatic launching**: At this point, when a user logs in they will just get a blank account.  However, TLJH has the [*nbgitpuller* extension installed](https://the-littlest-jupyterhub.readthedocs.io/en/latest/howto/content/nbgitpuller.html), which allows you to configure a link to automatically perform a git pull of the latest version of your repository.  This will install/update the software to the latest version in the student's account.  With some tweaking, we can also take advantage of the *appmode** extension we installed so that we can automatically update the software.
+3. **Setting up Automatic download of notebooks and Automatic launching**: At this point, when a user logs in they will just get a blank account.  However, TLJH has the [*nbgitpuller* extension installed](https://the-littlest-jupyterhub.readthedocs.io/en/latest/howto/content/nbgitpuller.html), which allows you to configure a link to automatically perform a git pull of the latest version of your repository.  This will install/update the software to the latest version in the student's account.  With some tweaking, we can also take advantage of the *appmode** extension we installed so that we can automatically update the software.
 	* Use this [Binder page](https://mybinder.org/v2/gh/jupyterhub/nbgitpuller/master?urlpath=apps/binder%2Flink_generator.ipynb) to generate the appropriate URL to give your students.  It may take a few minutes for the Binder session to launch. Once you see the page which looks like what is shown here. ![Image of nbgitpuller generator page](media/nbgitpulller.png)
 	* On that page, fill in the fields:
 		* ``hub_url`` is the url of your JupyterHub Server
