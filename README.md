@@ -96,13 +96,13 @@ jupyter labextension install @jupyter-voila/jupyterlab-preview
 2. **Run Voila:** Once we have Voila installed, just `cd` to the directory where you have the AstroInteractives installed and type:
 
 ```
-voila -Ñno-browser
+voila --no-browser
 ```
 
 which opens up port 8866 for access to the interactive (*NOTE*: the default voila session also strips the source from the HTML comments, so students can't see the source code by any means).  Have students point their web-browsers to 
 
 ```
-http://<name of host>:8866/voila/render/index.ipynb
+http://<my_TLJH_server>:8866/voila/render/index.ipynb
 ```
 
 and they should see the index page for the interactives.  I saved this URL as a shorter [bit.ly](http://bit.ly) link and distributed it to students.  **WARNING**: I currently have made no effort to automate the launching of this `voila` server so if the server goes down, I have to manually relaunch it.
